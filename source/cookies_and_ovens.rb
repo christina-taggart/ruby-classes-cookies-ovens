@@ -22,6 +22,13 @@ class Oven
     puts "You baked #{@batch.length} cookies for #{@bake_time} mins!"
   end
 
+  def check_cookies
+    @batch.each do |cookie|
+      cookie.update_state
+      puts "#{cookie.state} #{cookie.name}"
+    end
+  end
+
   private
 
   def one_min_passes
@@ -39,7 +46,7 @@ class Oven
 end
 
 class Cookie
-  attr_reader :bake_time, :ingredients
+  attr_reader :bake_time, :ingredients, :mins_cooked, :state, :name
   attr_accessor :mins_cooked
   @@batch = []
 
@@ -47,6 +54,8 @@ class Cookie
     @bake_time = bake_time
     @ingredients = ingredients
     @mins_cooked = 0
+    @state = "doughy"
+    @name = nil
   end
 
   def self.batch
@@ -56,6 +65,15 @@ class Cookie
   def add_to_batch
     @@batch << self
   end
+
+  def update_state(doughy, cooked, burned)
+    if mins_cooked >= cooked && mins_cooked < burned
+      @state = "cooked"
+    elsif mins_cooked > burned
+        @state = "burned"
+    end
+  end
+
 end
 
 class PeanutButterCookie < Cookie
@@ -64,6 +82,9 @@ class PeanutButterCookie < Cookie
     @name = "Peanut Butter"
   end
 
+  def update_state
+    super(9, 10, 13)
+  end
 
 end
 
@@ -72,12 +93,20 @@ class SugarCookie < Cookie
     super
     @name = "Sugar"
   end
+
+  def update_state
+    super(7, 8, 11)
+  end
 end
 
 class ChocolateChipCookie < Cookie
   def initialize(bake_time = 12, ingredients = ["chocolate", "chip", "cookie"])
     super
     @name = "Chocolate Chip"
+  end
+
+  def update_state
+    super(11, 12, 15)
   end
 
 end
@@ -98,3 +127,4 @@ Cookie.batch
 
 convection = Oven.new(Cookie.batch)
 convection.bake!
+convection.check_cookies
