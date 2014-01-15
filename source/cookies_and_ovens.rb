@@ -8,3 +8,27 @@
 
 
 # Your code here
+class Oven
+	@@ready = false
+	def bake!
+		@@ready = true
+	end
+	def ready?
+		@@ready
+	end
+end
+
+class Cookie < Oven
+	def initialize(cookie_type)
+		@type = cookie_type
+	end
+	def make_cookie
+		self.bake!
+		self.ready?
+		p "Your #{@type} cookie is ready!"
+	end
+end
+
+oven = Oven.new
+choc_chip = Cookie.new("Chocolate Chip")
+choc_chip.make_cookie
