@@ -11,10 +11,14 @@
 
 
 class Cookie
-  attr_reader :flavor, :cookie_bake_time
+  attr_reader :flavor, :cookie_bake_time, :doughy, :almost_ready, :ready, :burned
   def initialize(flavor, bake_time)
     @flavor = flavor
     @cookie_bake_time = bake_time
+    @doughy = false
+    @almost_ready = false
+    @ready = false
+    @burned = false
   end
 end
 
@@ -39,11 +43,47 @@ class Oven
   def initialize
     @temperature = 325
     @time_baking = 0
+
   end
 
-  def bake(batch_bake_time)
-    @time_baking += 1 until @time_baking == batch_bake_time
-    puts "The cookies have baked and they smell mmm mmm good!"
+  def bake(batch)
+    @time_baking += 2
+    if @time_baking <= 3
+      batch.doughy = true
+    elsif @time_baking <= 11#@time_remaining - 1
+      batch.almost_ready = true
+    elsif @time_baking == 12 #@time_remaining
+      batch.ready = true
+      puts "smells mmmmmmm mmmmm good"
+    else
+      batch.burned = true
+    end
+  end
+
+  # def status_of_cookies
+  #   if @time_baking <= 3
+  #     @doughy = true
+  #   elsif @time_baking <= 11#@time_remaining - 1
+  #     @almost_ready = true
+  #   elsif @time_baking == 12 #@time_remaining
+  #     @ready = true
+  #     puts "smells mmmmmmm mmmmm good"
+  #   else
+  #     @burned = true
+  #   end
+  # end
+
+  def check_cookies_in_oven(batch)
+
+    if @time_baking <= 3
+      puts "The cookies are doughy and need to bake much longer."
+    elsif @time_baking <= batch.batch_bake_time
+      puts "Just a minute longer..."
+    elsif @time_baking == batch.batch_bake_time
+      puts "Take the cookies out now!"
+    elsif @time_baking > batch.batch_bake_time
+      puts "Oh dear, the cookies have been baked to a crisp!"
+    end
   end
 
 end
@@ -56,4 +96,12 @@ p choco_chip_batch.calculate_bake_time(choco_chip) == 14
 p choco_chip_batch.flavor
 oven = Oven.new
 p oven.temperature == 325
-oven.bake(14)
+oven.bake(choco_chip_batch)
+p oven.check_cookies_in_oven(choco_chip_batch)
+oven.bake(choco_chip_batch)
+p oven.check_cookies_in_oven(choco_chip_batch)
+6.times do oven.bake(choco_chip_batch) end
+p oven.check_cookies_in_oven(choco_chip_batch)
+p oven.check_cookies_in_oven(choco_chip_batch)
+
+
