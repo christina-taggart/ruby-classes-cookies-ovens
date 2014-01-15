@@ -56,6 +56,9 @@ class Cookie
     @mins_cooked = 0
     @state = "doughy"
     @name = nil
+    @doughy = 0
+    @cooked = 0
+    @burned = 0
   end
 
   def self.batch
@@ -66,36 +69,32 @@ class Cookie
     @@batch << self
   end
 
-  def update_state(doughy, cooked, burned)
-    if mins_cooked >= cooked && mins_cooked < burned
+  def update_state
+    if mins_cooked >= @cooked && mins_cooked < @burned
       @state = "cooked"
-    elsif mins_cooked > burned
+    elsif mins_cooked > @burned
         @state = "burned"
     end
   end
-
 end
 
 class PeanutButterCookie < Cookie
   def initialize(bake_time = 10, ingredients = ["peanuts", "butter", "cookie"])
     super
     @name = "Peanut Butter"
+    @doughy = 9
+    @cooked = 10
+    @burned = 13
   end
-
-  def update_state
-    super(9, 10, 13)
-  end
-
 end
 
 class SugarCookie < Cookie
   def initialize(bake_time = 8, ingredients = ["sugar", "cookie"])
     super
     @name = "Sugar"
-  end
-
-  def update_state
-    super(7, 8, 11)
+    @doughy = 7
+    @cooked = 8
+    @burned = 11
   end
 end
 
@@ -103,12 +102,10 @@ class ChocolateChipCookie < Cookie
   def initialize(bake_time = 12, ingredients = ["chocolate", "chip", "cookie"])
     super
     @name = "Chocolate Chip"
+    @doughy = 11
+    @cooked = 12
+    @burned = 15
   end
-
-  def update_state
-    super(11, 12, 15)
-  end
-
 end
 
 peanut = PeanutButterCookie.new
