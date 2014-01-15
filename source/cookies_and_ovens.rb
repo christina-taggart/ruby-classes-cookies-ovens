@@ -71,6 +71,7 @@ class Oven
     if @batch
       puts "The oven is full."
     else
+      puts "You add your cookies to the oven."
       @batch = batch
     end
   end
@@ -79,6 +80,7 @@ class Oven
     if self.empty?
       report_no_cookies
     else
+      puts "mmmm...cookies!"
       removed_batch = @batch
       @batch = nil
       removed_batch
