@@ -8,100 +8,116 @@
 
 
 # Your code here
+# class Oven
+#         @@ready = false
+#         def bake!
+#                 @@ready = true
+#         end
+#         def ready?
+#                 @@ready
+#         end
+# end
+
+# class Cookie < Oven
+#         def initialize(cookie_type)
+#                 @type = cookie_type
+#         end
+#         def make_cookie
+#                 self.bake!
+#                 self.ready?
+#                 p "Your #{@type} cookie is ready!"
+#         end
+# end
+
+# oven = Oven.new
+# choc_chip = Cookie.new("Chocolate Chip")
+# choc_chip.make_cookie
 
 
-class Cookie
-  attr_reader :flavor, :cookie_bake_time, :doughy, :almost_ready, :ready, :burned
-  def initialize(flavor, bake_time)
-    @flavor = flavor
-    @cookie_bake_time = bake_time
-    @doughy = false
-    @almost_ready = false
-    @ready = false
-    @burned = false
-  end
-end
+# Nouns
+# - Cookies (types are included)
+# - Oven
+# - Batch
 
-class Batch
-  attr_reader :count, :flavor, :ready, :batch_bake_time
-  def initialize(cookie, count)
-    @count = count
-    @cookies = Array.new(count, cookie)
-    @flavor = cookie.flavor
-  end
+# VERBS
+# - make (cookies)
+# - bake
+# - remove
+# - place (insert)
 
-    #calculate_bake_time(cookie)
+# Oven
+# Methods - bake, place, remove
+# Attributes - timer?,
 
-  def calculate_bake_time(cookie)
-    @batch_bake_time = cookie.cookie_bake_time + @count / 10
-  end
-end
+# Cookie
+# Methods - make (initialize), place?, bake?
+# Attributes - type,
+# when to remove the cookie?
+
+# the oven holds cookies
+
+# INHERITANCE
+# "IS A"   -   A BAT IS A MAMMAL, A bus is a vehicle, An orange is a fruit
+#
+# COMPOSITION
+# "HAS A"  - A bike has gears,  A tree has oranges,
+# Oven has cookies
+# Batch has cookies
+#
+# class OrangeTree
+#    def initialize
+#             @oranges = []
+#    end
+#    def grow
+#       # make new oranges
+#    end
+# end
+
 
 class Oven
-  attr_reader :temperature
-
   def initialize
-    @temperature = 325
-    @time_baking = 0
-
+    @cookies_tray = []
+    @baked = false
   end
-
-  def bake(batch)
-    @time_baking += 2
-    if @time_baking <= 3
-      batch.doughy = true
-    elsif @time_baking <= 11#@time_remaining - 1
-      batch.almost_ready = true
-    elsif @time_baking == 12 #@time_remaining
-      batch.ready = true
-      puts "smells mmmmmmm mmmmm good"
-    else
-      batch.burned = true
+  def insert_cookies(cookie)
+    @cookies_tray << cookie
+  end
+  def bake_cookies(cookie)
+    unless cookie.doneness == true
+      cookie.done?
     end
   end
-
-  # def status_of_cookies
-  #   if @time_baking <= 3
-  #     @doughy = true
-  #   elsif @time_baking <= 11#@time_remaining - 1
-  #     @almost_ready = true
-  #   elsif @time_baking == 12 #@time_remaining
-  #     @ready = true
-  #     puts "smells mmmmmmm mmmmm good"
-  #   else
-  #     @burned = true
-  #   end
-  # end
-
-  def check_cookies_in_oven(batch)
-
-    if @time_baking <= 3
-      puts "The cookies are doughy and need to bake much longer."
-    elsif @time_baking <= batch.batch_bake_time
-      puts "Just a minute longer..."
-    elsif @time_baking == batch.batch_bake_time
-      puts "Take the cookies out now!"
-    elsif @time_baking > batch.batch_bake_time
-      puts "Oh dear, the cookies have been baked to a crisp!"
+  def remove
+    @cookies_tray
+  end
+  def serve
+    @cookies_tray.each do |cookie|
+      p "Your #{cookie.cookie_type} is ready to eat"
     end
   end
-
 end
 
-choco_chip = Cookie.new("chocolate chip", 12)
-p choco_chip
-choco_chip_batch = Batch.new(choco_chip, 20)
-#p choco_chip_batch
-p choco_chip_batch.calculate_bake_time(choco_chip) == 14
-p choco_chip_batch.flavor
+class Cookie
+  attr_reader :doneness, :cookie_type
+  def initialize(type_of_cookie)
+    @cookie_type = type_of_cookie
+    @doneness = false
+  end
+  def done?
+    @doneness = true
+  end
+end
+
+# class MakeCookies
+#   def make
+
+#   end
+# end
+
+
 oven = Oven.new
-p oven.temperature == 325
-oven.bake(choco_chip_batch)
-p oven.check_cookies_in_oven(choco_chip_batch)
-oven.bake(choco_chip_batch)
-p oven.check_cookies_in_oven(choco_chip_batch)
-6.times do oven.bake(choco_chip_batch) end
-p oven.check_cookies_in_oven(choco_chip_batch)
-p oven.check_cookies_in_oven(choco_chip_batch)
-
-
+cookie = Cookie.new("Chocolate Chip")
+oven.insert_cookies(cookie)  # need to initialize a cookie
+oven.bake_cookies(cookie)   # maybe a destructive method?
+oven.remove
+oven.serve
